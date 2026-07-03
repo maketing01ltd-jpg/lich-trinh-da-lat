@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lịch trình Đà Lạt · Thành phố sương mù</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --fog:#F3EFE4;
+    --fog-deep:#EAE4D3;
+    --paper:#FBF9F2;
+    --pine:#2B4034;
+    --pine-deep:#1C2C23;
+    --sage:#7E9784;
+    --sage-light:#C9D5C2;
+    --clay:#B5623D;
+    --clay-light:#E8C4A9;
+    --rose:#D08C93;
+    --rose-light:#F0D6D3;
+    --ink:#2B2924;
+    --ink-soft:#5B584F;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--fog);
+    color:var(--ink);
+    font-family:'Montserrat', sans-serif;
+    font-weight:400;
+    line-height:1.65;
+  }
+  h1,h2,h3,h4{
+    font-family:'Montserrat', sans-serif;
+    font-weight:700;
+    margin:0;
+    color:var(--pine-deep);
+  }
+  .sprite{position:absolute;width:0;height:0;overflow:hidden;}
+  .icon{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    min-height:78vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    overflow:hidden;
+    background:linear-gradient(180deg,#3C5A48 0%,#5C7A63 38%,#A6B79A 68%,var(--fog) 100%);
+    padding:2rem 1.5rem 6rem;
+  }
+  .hero svg.scene{position:absolute; inset:0; width:100%; height:100%;}
+  .cloud{opacity:.85;}
+  .cloud.c1{animation:drift 46s linear infinite;}
+  .cloud.c2{animation:drift 62s linear infinite reverse;}
+  .cloud.c3{animation:drift 38s linear infinite;}
+  @keyframes drift{
+    0%{transform:translateX(-8%);}
+    50%{transform:translateX(8%);}
+    100%{transform:translateX(-8%);}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .cloud{animation:none !important;}
+  }
+  .hero-content{position:relative;z-index:2; max-width:640px;}
+  .eyebrow{
+    font-size:.72rem;
+    letter-spacing:.32em;
+    text-transform:uppercase;
+    color:#EFE7D3;
+    margin-bottom:1.1rem;
+    font-weight:600;
+  }
+  .hero h1{
+    font-size:clamp(2.1rem, 5.4vw, 3.5rem);
+    color:#FBF7EC;
+    letter-spacing:0;
+    text-shadow:0 2px 24px rgba(0,0,0,.18);
+  }
+  .hero p.tagline{
+    font-family:'Montserrat', sans-serif;
+    font-style:italic;
+    font-weight:500;
+    font-size:1.1rem;
+    color:#EDE6D2;
+    margin-top:.9rem;
+  }
+  .route-pills{
+    display:flex; gap:.7rem; justify-content:center; margin-top:2.2rem; flex-wrap:wrap;
+  }
+  .route-pills a{
+    text-decoration:none;
+    font-size:.78rem;
+    font-weight:500;
+    letter-spacing:.03em;
+    color:#F6F1E4;
+    border:1px solid rgba(246,241,228,.55);
+    padding:.5rem 1.15rem;
+    border-radius:999px;
+    background:rgba(255,255,255,.06);
+    transition:background .2s ease;
+  }
+  .route-pills a:hover{background:rgba(255,255,255,.16);}
+
+  /* ---------- LAYOUT ---------- */
+  .wrap{max-width:760px; margin:0 auto; padding:0 1.5rem;}
+  .day{margin-top:-3.5rem; position:relative; z-index:3;}
+  .day + .day{margin-top:4rem;}
+  .day-header{
+    background:var(--paper);
+    border:1px solid var(--fog-deep);
+    border-radius:18px;
+    padding:1.8rem 2rem;
+    box-shadow:0 18px 40px -24px rgba(28,44,35,.35);
+  }
+  .day-num{
+    font-size:.72rem;
+    letter-spacing:.28em;
+    text-transform:uppercase;
+    color:var(--clay);
+    font-weight:700;
+  }
+  .day-header h2{font-size:clamp(1.5rem,4vw,2.1rem); margin-top:.35rem;}
+  .day-header .desc{
+    color:var(--ink-soft);
+    font-size:.94rem;
+    margin-top:.6rem;
+    max-width:52ch;
+  }
+
+  .period{margin-top:2.6rem;}
+  .period-title{
+    display:flex; align-items:center; gap:.6rem;
+    font-family:'Montserrat', sans-serif;
+    font-size:1.05rem;
+    font-weight:700;
+    color:var(--pine);
+    margin-left:.2rem;
+    margin-bottom:1.1rem;
+    letter-spacing:.01em;
+  }
+  .period-title .icon{color:var(--clay); width:19px; height:19px;}
+  .period-title::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:linear-gradient(90deg, var(--sage-light), transparent);
+  }
+
+  .timeline{
+    position:relative;
+    padding-left:2.6rem;
+  }
+  .timeline::before{
+    content:"";
+    position:absolute;
+    left:.95rem; top:.4rem; bottom:.4rem;
+    width:1px;
+    background:repeating-linear-gradient(to bottom, var(--sage-light) 0 6px, transparent 6px 11px);
+  }
+  .activity{
+    position:relative;
+    margin-bottom:1.5rem;
+  }
+  .activity:last-child{margin-bottom:0;}
+  .activity::before{
+    content:"";
+    position:absolute;
+    left:-2.6rem; top:.35rem;
+    width:9px; height:9px;
+    border-radius:50%;
+    background:var(--paper);
+    border:1.5px solid var(--clay);
+  }
+  .card{
+    background:var(--paper);
+    border:1px solid var(--fog-deep);
+    border-radius:14px;
+    overflow:hidden;
+  }
+  .illustration{width:100%;height:100%;display:block;object-fit:cover;background:var(--fog-deep);}
+  .card-body{padding:1rem 1.2rem;}
+  .time{
+    font-size:.72rem;
+    letter-spacing:.06em;
+    color:var(--clay);
+    font-weight:600;
+    font-variant-numeric:tabular-nums;
+  }
+  .card h4{
+    font-size:1.02rem;
+    margin-top:.2rem;
+    color:var(--ink);
+    font-weight:600;
+  }
+  .card p.desc{
+    font-size:.88rem;
+    color:var(--ink-soft);
+    margin-top:.35rem;
+  }
+  .place-tag{
+    display:inline-flex;
+    align-items:center;
+    gap:.3rem;
+    font-size:.74rem;
+    font-weight:500;
+    color:var(--pine);
+    background:var(--sage-light);
+    border-radius:999px;
+    padding:.2rem .65rem;
+    margin-top:.55rem;
+    margin-right:.4rem;
+  }
+  .place-tag .icon{width:12px;height:12px;}
+
+  .free-block{
+    background:var(--paper);
+    border:1px solid var(--fog-deep);
+    border-radius:14px;
+    overflow:hidden;
+  }
+  .free-block .card-body h4{font-size:1rem; font-weight:600;}
+  .free-block .card-body p{font-size:.88rem; color:var(--ink-soft); margin-top:.35rem;}
+
+  .subgroup-tag{
+    font-size:.72rem;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--rose-light);
+    background:var(--pine);
+    display:inline-block;
+    padding:.35rem .8rem;
+    border-radius:999px;
+    margin-bottom:1rem;
+    font-weight:600;
+  }
+
+  footer{
+    margin-top:5rem;
+    padding:3rem 1.5rem 4rem;
+    text-align:center;
+    background:linear-gradient(180deg, var(--fog) 0%, #DDE3D3 100%);
+  }
+  footer .icon{width:26px;height:26px; color:var(--pine); margin-bottom:.8rem;}
+  footer p{
+    font-family:'Montserrat', sans-serif;
+    font-style:italic;
+    font-weight:500;
+    font-size:1.05rem;
+    color:var(--pine-deep);
+    max-width:34ch;
+    margin:0 auto;
+  }
+  footer .small{
+    font-style:normal;
+    font-weight:600;
+    font-size:.76rem;
+    color:var(--ink-soft);
+    margin-top:.8rem;
+    letter-spacing:.06em;
+  }
+
+  @media (max-width:600px){
+    .timeline{padding-left:2rem;}
+    .activity::before{left:-2rem;}
+    .day-header{padding:1.4rem 1.3rem;}
+  }
+</style>
+</head>
+<body>
+
+<svg class="sprite" aria-hidden="true">
+  <symbol id="i-sunrise" viewBox="0 0 24 24"><circle cx="12" cy="14" r="4.2"/><path d="M12 4v2.4M4.2 8.2l1.7 1.7M19.8 8.2l-1.7 1.7M2 20h20M5.5 20a6.5 6.5 0 0113 0"/></symbol>
+  <symbol id="i-scooter" viewBox="0 0 24 24"><circle cx="6" cy="18" r="2.3"/><circle cx="18" cy="18" r="2.3"/><path d="M6 18h4l2-6h4.5c1.4 0 2.5 1.1 2.5 2.5V18M12 12l-1.5-4H8"/></symbol>
+  <symbol id="i-bread" viewBox="0 0 24 24"><path d="M4 12c0-4.4 3.6-8 8-8s8 3.6 8 8-3.6 3-8 3-8 1.4-8-3z"/><path d="M8 10.5c.6-1 1.6-1.6 2.6-1.8M13.4 8.7c1 .2 2 .8 2.6 1.8"/></symbol>
+  <symbol id="i-cloud-swing" viewBox="0 0 24 24"><path d="M7 15a3.5 3.5 0 010-7 4.5 4.5 0 018.7-1.3A3.2 3.2 0 0119 12.5c0 1.4-1.1 2.5-2.5 2.5H7z"/><path d="M12 15v5M9 22l3-2 3 2"/></symbol>
+  <symbol id="i-bowl" viewBox="0 0 24 24"><path d="M3 11h18a9 9 0 01-18 0z"/><path d="M8 11c0-2 1-4 4-4s4 2 4 4M5 15l1 2h12l1-2"/></symbol>
+  <symbol id="i-bed" viewBox="0 0 24 24"><path d="M3 18v-6a2 2 0 012-2h4a2 2 0 012 2v2M3 18h18v-4a2 2 0 00-2-2h-6M3 18v2M21 18v2"/><circle cx="6.5" cy="11.3" r="1.3"/></symbol>
+  <symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15 9l-2 5-5 2 2-5 5-2z"/></symbol>
+  <symbol id="i-grill" viewBox="0 0 24 24"><path d="M4 10h16M6 10l1 9h10l1-9M9 10V6a3 3 0 016 0v4"/></symbol>
+  <symbol id="i-market" viewBox="0 0 24 24"><path d="M4 9l1-4h14l1 4M4 9h16M5 9v10h14V9M9 13v3M15 13v3"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 1110.2 4.2 6.8 6.8 0 0020 14.5z"/></symbol>
+  <symbol id="i-mist-peak" viewBox="0 0 24 24"><path d="M2 17l6-8 4 4.5 3-4L22 17z"/><path d="M4 20h16M6 14.5c1 .8 2 .8 3 0"/></symbol>
+  <symbol id="i-coffee" viewBox="0 0 24 24"><path d="M5 8h11v6a5 5 0 01-5 5H9a4 4 0 01-4-4V8z"/><path d="M16 9.5h1.5a2.3 2.3 0 010 4.6H16M9 4c0 1-1 1-1 2M13 4c0 1-1 1-1 2"/></symbol>
+  <symbol id="i-strawberry" viewBox="0 0 24 24"><path d="M12 8c4 0 6.5 3.4 6.5 6.6C18.5 18.5 15.5 21 12 21s-6.5-2.5-6.5-6.4C5.5 11.4 8 8 12 8z"/><path d="M12 8V5M9 5.8c.6-1 1.8-1.6 3-1.6s2.4.6 3 1.6M9 13h.01M12 15h.01M15 13h.01M10.5 17h.01M13.5 17h.01"/></symbol>
+  <symbol id="i-house" viewBox="0 0 24 24"><path d="M4 11l8-6 8 6M6 10v9h12v-9"/><path d="M10 19v-5h4v5"/></symbol>
+  <symbol id="i-suitcase" viewBox="0 0 24 24"><rect x="3.5" y="8" width="17" height="11" rx="1.6"/><path d="M9 8V6a1.5 1.5 0 011.5-1.5h3A1.5 1.5 0 0115 6v2M3.5 12.5h17"/></symbol>
+  <symbol id="i-hill" viewBox="0 0 24 24"><path d="M2 17c3-4 5-4 7 0 2-6 4-6 6 0 2-3 4-3 7 0"/><path d="M2 20h20"/></symbol>
+  <symbol id="i-temple" viewBox="0 0 24 24"><path d="M12 3l9 5H3z"/><path d="M5 9v10M19 9v10M9 9v10M15 9v10M3 21h18"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M4.2 4.2l1.5 1.5M18.3 18.3l1.5 1.5M3 12h2M19 12h2M4.2 19.8l1.5-1.5M18.3 5.7l1.5-1.5"/></symbol>
+  <symbol id="i-bus" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="11" rx="2"/><path d="M3 12h18M7 17v2M17 17v2"/><circle cx="7.5" cy="19.3" r="1"/><circle cx="16.5" cy="19.3" r="1"/></symbol>
+  <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M4 20c8 0 14-6 14-14v-2h-2C8 4 4 10 4 18v2z"/><path d="M6 18c4-4 8-8 12-12"/></symbol>
+</svg>
+
+<header class="hero">
+  <svg class="scene" viewBox="0 0 1200 500" preserveAspectRatio="xMidYMax slice">
+    <path d="M0 340 L120 230 L230 300 L340 190 L470 320 L600 210 L730 310 L860 230 L980 320 L1120 240 L1200 320 L1200 500 L0 500 Z" fill="#2C4436"/>
+    <path d="M0 380 L150 290 L280 350 L420 260 L560 370 L700 280 L850 360 L1000 270 L1150 350 L1200 330 L1200 500 L0 500 Z" fill="#3A5945"/>
+    <g class="cloud c1" fill="#F4F1E4" opacity=".8">
+      <ellipse cx="180" cy="330" rx="90" ry="20"/>
+      <ellipse cx="260" cy="320" rx="60" ry="16"/>
+    </g>
+    <g class="cloud c2" fill="#F4F1E4" opacity=".7">
+      <ellipse cx="650" cy="360" rx="110" ry="22"/>
+      <ellipse cx="760" cy="350" rx="70" ry="18"/>
+    </g>
+    <g class="cloud c3" fill="#F4F1E4" opacity=".85">
+      <ellipse cx="980" cy="310" rx="95" ry="19"/>
+      <ellipse cx="1060" cy="300" rx="55" ry="14"/>
+    </g>
+  </svg>
+  <div class="hero-content">
+    <div class="eyebrow">Hai ngày · Một đêm · Phố núi</div>
+    <h1>Lịch trình cụ thể Đà Lạt</h1>
+    <p class="tagline">Từ bình minh trên đồi thông đến sương khuya nơi quảng trường</p>
+    <div class="route-pills">
+      <a href="#ngay1">Ngày 1 — Thành phố sương mù</a>
+      <a href="#ngay2">Ngày 2 — Đà Lạt hoàng hôn</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ============ NGÀY 1 ============ -->
+  <section class="day" id="ngay1">
+    <div class="day-header">
+      <div class="day-num">Ngày 1</div>
+      <h2>Thành phố sương mù</h2>
+      <p class="desc">Một ngày trọn vẹn từ lúc phố núi còn ngái ngủ trong sương đến khi ánh đèn chợ đêm thắp sáng quảng trường.</p>
+    </div>
+
+    <div class="period">
+      <div class="period-title"><svg class="icon"><use href="#i-sunrise"/></svg>Buổi sáng</div>
+      <div class="timeline">
+
+        <div class="activity">
+          <div class="card">
+            <img class="illustration" src="https://lens.usercontent.google.com/banana?agsi=CmdnbG9iYWw6OjAwMDA1NWNmZWM3MDAyNmQ6MDAwMDAwZWI6MTpiYTk2ZTY1NjYwNGNlMTYzOjAwMDA1NWNmZWM3MDAyNmQ6MDAwMDAyZWY5NDUwMzM2ODowMDA2NTVhYzNkODEzMTlmEAIYAQ==" alt="Ảnh minh họa: Đặt chân đến Đà Lạt">
+            <div class="card-body">
+              <div class="time">5h30 — 6h00</div>
+              <h4>Đặt chân đến Đà Lạt</h4>
+              <p class="desc">Xe vừa dừng bánh, không khí se lạnh của cao nguyên ùa vào là lời chào đầu tiên. Gửi đồ tại khách sạn, nhận xe máy và tranh thủ chuẩn bị tinh thần cho một ngày dài rong ruổi.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="activity">
+          <div class="card tone-clay">
+            <img class="illustration" src="https://cdn.tgdd.vn/Files/2022/11/22/1489288/cach-nau-banh-mi-xiu-mai-da-lat-thom-ngon-chuan-vi-202211220031134400.jpg" alt="Ảnh minh họa: Ăn sáng cùng bánh mì xíu mại">
+            <div class="card-body">
+              <div class="time">7h00</div>
+              <h4>Ăn sáng cùng bánh mì xíu mại</h4>
+              <p class="desc">Món ăn sáng đặc trưng của Đà Lạt: viên xíu mại nóng hổi thả trong chén nước dùng, ăn kèm bánh mì giòn — vừa đủ ấm bụng để bắt đầu hành trình.</p>
+              <span class="place-tag"><svg class="icon"><use href="#i-market"/></svg>Bánh mì Xíu Mại 47</span>
+              <span class="place-tag"><svg class="icon"><use href="#i-market"/></svg>Bánh mì Xíu Mại Bé Linh</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="activity">
+          <div class="card">
+            <img class="illustration" src="https://i.ibb.co/TB7Pg6NW/Chat-GPT-Image-Jul-3-2026-11-23-36-AM.png" alt="Ảnh minh họa: Xuất phát đi Mongo Land">
+            <div class="card-body">
+              <div class="time">8h00</div>
+              <h4>Xuất phát đi Mongo Land</h4>
+              <p class="desc">Rời trung tâm, chạy xe len lỏi qua những con dốc thông xanh, sương còn vương trên lá — cung đường ngắn nhưng đủ để cảm nhận trọn vẹn chất núi rừng.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="activity">
+          <div class="card tone-rose">
+            <img class="illustration" src="https://vietchallenge.com/images/uploads/mongo-land-da-lat-1.jpg" alt="Ảnh minh họa: Vui chơi tại Mongo Land">
+            <div class="card-body">
+              <div class="time">9h00</div>
+              <h4>Vui chơi tại Mongo Land</h4>
+              <p class="desc">Khu du lịch với những tiểu cảnh mây tre, xích đu giữa đồi thông và loạt góc check-in nên thơ — cứ thong thả khám phá và tự do vui chơi ở đây.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="period">
+      <div class="period-title"><svg class="icon"><use href="#i-bowl"/></svg>Buổi trưa</div>
+      <div class="timeline">
+
+        <div class="activity">
+          <div class="card">
+            <img class="illustration" src="https://agotourist.com/wp-content/uploads/2022/08/mongo-land-da-lat.jpg" alt="Ảnh minh họa: Tạm biệt Mongo Land">
+            <div class="card-body">
+              <div class="time">10h30 — 11h — 11h30</div>
+              <h4>Tạm biệt Mongo Land</h4>
+              <p class="desc">Nắng trưa cao nguyên bắt đầu dịu lại đúng lúc rời khỏi Mongo Land, trở về trung tâm thành phố để tiếp tục hành trình.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="activity">
+          <div class="card tone-clay">
+            <img class="illustration" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzAfliPWxU7_6bOlCRmkwZiGzvTGv25E34lJfXENSi2qECFvT6Uitsg6SQ&s=10" alt="Ảnh minh họa: Ăn trưa tại Vườn Nhà Ngoại">
+            <div class="card-body">
+              <div class="time">11h30 — 12h — 12h30</div>
+              <h4>Ăn trưa tại Vườn Nhà Ngoại</h4>
+              <p class="desc">Bữa trưa mang không khí ấm cúng như ghé thăm nhà, giữa khoảng sân xanh mát — nơi để cả nhóm ngồi lại, nạp năng lượng sau nửa ngày rong chơi.</p>
+              <span class="place-tag"><svg class="icon"><use href="#i-market"/></svg>Tiệm ăn Vườn Nhà Ngoại</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="activity">
+          <div class="card">
+            <img class="illustration" src="https://i.ibb.co/LXj96ms0/Chat-GPT-Image-Jul-3-2026-11-09-26-AM.png" alt="Ảnh minh họa: Nhận phòng khách sạn">
+            <div class="card-body">
+              <div class="time">13h30</div>
+              <h4>Nhận phòng khách sạn</h4>
+              <p class="desc">Cất bớt hành lý, thả người xuống giường nghỉ ngơi một lát — dưỡng sức cho buổi chiều và tối còn nhiều điều thú vị phía trước.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="period">
+      <div class="period-title"><svg class="icon"><use href="#i-compass"/></svg>Buổi chiều</div>
+      <div class="free-block">
+        <img class="illustration" src="https://seagulltravel.com.vn/wp-content/uploads/2025/09/Da-lat-2.jpg" alt="Ảnh minh họa: 14h30 — 16h50 · Vui chơi tự do">
+        <div class="card-body">
+          <h4>14h30 — 16h50 · Vui chơi tự do</h4>
+          <p>Khoảng thời gian dành riêng cho những ai vẫn còn sung sức — tự do phạm vi toàn Đà Lạt, muốn ghé quán cà phê view đồi, dạo hồ hay tranh thủ chợp mắt đều được, miễn quay lại khách sạn đúng giờ hẹn buổi tối.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="period">
+      <div class="period-title"><svg class="icon"><use href="#i-moon"/></svg>Buổi tối</div>
+      <div class="timeline">
+
+        <div class="activity">
+          <div class="card">
+            <img class="illustration" src="https://i.ibb.co/WpxvFkpn/123.png" alt="Ảnh minh họa: Tập trung tại khách sạn">
+            <div class="card-body">
+              <div class="time">17h00</div>
+              <h4>Tập trung tại khách sạn</h4>
+              <p class="desc">Cả nhóm quay về điểm hẹn, chuẩn bị áo ấm — trời Đà Lạt về chiều xuống nhiệt khá nhanh.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="activity">
+          <div class="card tone-clay">
+            <img class="illustration" src="https://i.ibb.co/pCDWSYt/Chat-GPT-Image-Jul-3-2026-12-11-27-234.png" alt="Ảnh minh họa: Đi ăn đồ nướng">
+            <div class="card-body">
+              <div class="time">17h30</div>
+              <h4>Đi ăn đồ nướng</h4>
+              <p class="desc">Khói bếp nướng thơm lừng giữa cái lạnh se sắt của phố núi — bữa tối lý tưởng để quây quần, trò chuyện rôm rả sau một ngày dài.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="activity">
+          <div class="card tone-rose">
+            <img class="illustration" src="https://2trip.vn/wp-content/uploads/2020/10/quang-truong-lam-vien-3.jpg" alt="Ảnh minh họa: Dạo phố Quảng Trường — Chợ Đà Lạt">
+            <div class="card-body">
+              <div class="time">19h00</div>
+              <h4>Dạo phố Quảng Trường — Chợ Đà Lạt</h4>
+              <p class="desc">Ánh đèn vàng ấm hắt lên những bậc thang chợ, tiếng rao hàng hòa cùng hơi lạnh sương đêm — dạo bộ quanh quảng trường, ghé sạp hàng, nhâm nhi món vặt phố núi.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="activity">
+          <div class="card">
+            <img class="illustration" src="https://i.ibb.co/zj78Jvk/Trang.png" alt="Ảnh minh họa: Về khách sạn">
+            <div class="card-body">
+              <div class="time">21h00</div>
+              <h4>Về khách sạn</h4>
+              <p class="desc">Kết thúc ngày đầu tiên bằng một giấc ngủ sớm để lấy sức cho hành trình săn mây sáng mai, hoặc nán lại chơi ma sói cùng cả nhóm bên tách trà nóng.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ NGÀY 2 ============ -->
+  <section class="day" id="ngay2">
+    <div class="day-header">
+      <div class="day-num">Ngày 2</div>
+      <h2>Đà Lạt Bình Minh</h2>
+      <p class="desc">Ngày thứ hai mở đầu bằng biển mây lúc tờ mờ sáng, khép lại bằng chuyến xe đêm trở về Sài Gòn.</p>
+    </div>
+
+    <div class="period">
+      <div class="period-title"><svg class="icon"><use href="#i-mist-peak"/></svg>Buổi sáng</div>
+      <div class="timeline">
+
+        <div class="activity">
+          <div class="card tone-clay">
+            <img class="illustration" src="https://cafesongao.com/wp-content/uploads/2026/03/lac-hu-co-tran-1.jpg" alt="Ảnh minh họa: Xuất phát săn mây tại Lạc Hư Cổ Trấn">
+            <div class="card-body">
+              <div class="time">4h30</div>
+              <h4>Xuất phát săn mây tại Lạc Hư Cổ Trấn</h4>
+              <p class="desc">Trời còn tối mịt, cả nhóm lên đường trong cái lạnh buốt để kịp đón khoảnh khắc biển mây bồng bềnh phủ trắng thung lũng — một trong những trải nghiệm đáng nhớ nhất của chuyến đi.</p>
+              <span class="place-tag"><svg class="icon"><use href="#i-mist-peak"/></svg>Lạc Hư Cổ Trấn</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="activity">
+          <div class="card">
+            <img class="illustration" src="https://tiki.vn/blog/wp-content/uploads/2023/03/an-sang-da-lat.jpg" alt="Ảnh minh họa: Ăn sáng">
+            <div class="card-body">
+              <div class="time">6h30</div>
+              <h4>Ăn sáng</h4>
+              <p class="desc">Sau khi mây tan dần theo nắng sớm, cả nhóm tìm một quán ven đường lót dạ, hong tay bên tách cà phê nóng để xua tan cái lạnh còn sót lại.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="activity">
+          <div class="card tone-rose">
+            <img class="illustration" src="https://cdn3.ivivu.com/2019/03/vuon-dau-tay-co-the-nang-len-ha-xuong-o-da-lat-ivivu-.jpg" alt="Ảnh minh họa: Tham quan vườn dâu">
+            <div class="card-body">
+              <div class="time">8h00</div>
+              <h4>Tham quan vườn dâu</h4>
+              <p class="desc">Những luống dâu tây chín mọng nép mình dưới nắng sớm cao nguyên — tự tay hái, nếm thử vị chua ngọt tươi rói ngay tại vườn.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="activity">
+          <div class="card">
+            <img class="illustration" src="https://cdn3.ivivu.com/2019/07/thi-tran-nobi-ivivu-1.jpg" alt="Ảnh minh họa: Tham quan thị trấn Nobi">
+            <div class="card-body">
+              <div class="time">9h30</div>
+              <h4>Tham quan thị trấn Nobi</h4>
+              <p class="desc">Không gian nhỏ xinh mang màu sắc hoạt hình, những góc nhà đầy màu — điểm dừng chân nhẹ nhàng để chụp ảnh trước khi quay về trung tâm.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="period">
+      <div class="period-title"><svg class="icon"><use href="#i-suitcase"/></svg>Buổi trưa</div>
+      <div class="timeline">
+
+        <div class="activity">
+          <div class="card">
+            <img class="illustration" src="https://i.ibb.co/zVtHHWK0/Chat-GPT-Image-Jul-3-2026-01-57-42-PM.png" alt="Ảnh minh họa: Quay về khách sạn trả phòng">
+            <div class="card-body">
+              <div class="time">10h30 — 11h00</div>
+              <h4>Quay về khách sạn trả phòng</h4>
+              <p class="desc">Thu dọn hành lý, xếp lại những món quà lưu niệm vừa mua — khép lại phần lưu trú, sẵn sàng cho nửa ngày còn lại.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="activity">
+          <div class="card tone-clay">
+            <img class="illustration" src="https://tiki.vn/blog/wp-content/uploads/2023/02/an-trua-da-lat.jpg" alt="Ảnh minh họa: Đi ăn trưa">
+            <div class="card-body">
+              <div class="time">11h30</div>
+              <h4>Đi ăn trưa</h4>
+              <p class="desc">Bữa trưa nhẹ nhàng để nạp lại năng lượng trước khi nhóm chia làm hai hướng cho buổi chiều.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="period">
+      <div class="period-title"><svg class="icon"><use href="#i-hill"/></svg>Dành cho nhóm ở lại</div>
+      <span class="subgroup-tag">Buổi chiều mở rộng</span>
+      <div class="timeline">
+
+        <div class="activity">
+          <div class="card tone-rose">
+            <img class="illustration" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfIMDH6HTXMG0ngVGHkRu-oUM1YuNB_4OozhN7jI9LELdrXFI9wbZc_pw&s=10" alt="Ảnh minh họa: Đồi cỏ hồng hồ Tuyền Lâm">
+            <div class="card-body">
+              <div class="time">13h00</div>
+              <h4>Đồi cỏ hồng hồ Tuyền Lâm</h4>
+              <p class="desc">Thảm cỏ hồng trải dài bên mặt hồ xanh biếc, gió lùa nhẹ qua từng ngọn cỏ — khung cảnh lãng mạn bậc nhất Đà Lạt để thong thả tản bộ và chụp ảnh.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="activity">
+          <div class="card">
+            <img class="illustration" src="https://vj-prod-website-cms.s3.ap-southeast-1.amazonaws.com/depositphotos75049325xl-1727661791750.jpg" alt="Ảnh minh họa: Thiền Viện Trúc Lâm">
+            <div class="card-body">
+              <div class="time">14h30</div>
+              <h4>Thiền Viện Trúc Lâm</h4>
+              <p class="desc">Không gian tĩnh lặng giữa rừng thông, tiếng chuông chùa hòa cùng làn gió núi — một khoảng lặng cần thiết giữa hành trình rong ruổi.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="activity">
+          <div class="card tone-clay">
+            <img class="illustration" src="https://cdn3.ivivu.com/2022/09/th%C3%A1c-dantala.jpg" alt="Ảnh minh họa: Tự do tham quan">
+            <div class="card-body">
+              <div class="time">15h30</div>
+              <h4>Tự do tham quan</h4>
+              <p class="desc">Thời gian trống để ghé thêm một quán cà phê yêu thích, hoặc đơn giản là ngồi ngắm hoàng hôn buông xuống thành phố sương mù lần cuối trước khi rời đi.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="activity">
+          <div class="card">
+            <img class="illustration" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKbEREFQkYbx1Ml6LpT0J9mpzkc3ipMQXqpoRsLx4kV5tUNBRVfVm_UeE&s=10" alt="Ảnh minh họa: Tập trung ăn tối và chờ giờ lên xe">
+            <div class="card-body">
+              <div class="time">18h00</div>
+              <h4>Tập trung ăn tối và chờ giờ lên xe</h4>
+              <p class="desc">Bữa tối cuối cùng ở Đà Lạt, cả nhóm quây quần điểm lại những khoảnh khắc đáng nhớ trong hai ngày qua trước khi lên đường về lại Sài Gòn.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="activity">
+          <div class="card tone-rose">
+            <img class="illustration" src="https://lens.usercontent.google.com/banana?agsi=CmdnbG9iYWw6OjAwMDA1NWNmZWM3MDAyNmQ6MDAwMDAwZWI6MTo4YzQ2ZjZjMDE1MGQ0ZjU5OjAwMDA1NWNmZWM3MDAyNmQ6MDAwMDAyZWY5NDUwMzM2ODowMDA2NTVhZmQ1YzM0YzRmEAIYAQ==" alt="Ảnh minh họa: Lên xe về Sài Gòn">
+            <div class="card-body">
+              <div class="time">22h — 23h — 0h</div>
+              <h4>Lên xe về Sài Gòn</h4>
+              <p class="desc">Xe lăn bánh trong đêm, để lại phía sau những rặng thông và sương mờ Đà Lạt — người thân sẽ đón tận nhà khi xe về đến nơi.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <svg class="icon"><use href="#i-leaf"/></svg>
+  <p>Chúc chuyến đi tràn ngập nắng sớm, biển mây và những buổi tối ấm áp bên nhau.</p>
+  <div class="small">LỊCH TRÌNH CỤ THỂ ĐÀ LẠT · 2 NGÀY 1 ĐÊM</div>
+</footer>
+
+</body>
+</html>
